@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import FormField from '../components/FormField'
 import { validateAuth } from '../utils/validation'
 
 export default function AuthPage({ mode }) {
   const isSignup = mode === 'signup'
+  const navigate = useNavigate()
   const [values, setValues] = useState({ name: '', email: '', password: '', confirmPassword: '' })
   const [errors, setErrors] = useState({})
   const [submitted, setSubmitted] = useState(false)
@@ -31,6 +32,10 @@ export default function AuthPage({ mode }) {
     setNotice('')
     if (Object.keys(nextErrors).length) {
       event.currentTarget.elements.namedItem(Object.keys(nextErrors)[0])?.focus()
+      return
+    }
+    if (!isSignup) {
+      navigate('/home')
       return
     }
     setNotice('Your inputs pass the frontend checks. This is a demo only: no login was performed and no account was created.')
